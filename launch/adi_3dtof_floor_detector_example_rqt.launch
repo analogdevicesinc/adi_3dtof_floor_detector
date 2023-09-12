@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- ADI 3D ToF Floor Detector Example Node with rqt -->
+
+    <!-- Arguments -->
+    <arg name="arg_rostopic_cam_prefix" default="cam1" />
+    <arg name="arg_enable_pointcloud_output" default="0" />
+    <!-- use "raw" for uncompressed subscription
+         "compressedDepth" for compressed depth image subscription -->
+    <arg name="compression_parameter" default="raw" />
+
+    <!-- Launch ADI 3D ToF Floor Detector Example Node -->
+    <node name="adi_3dtof_floor_detector_example_node" pkg="adi_3dtof_floor_detector" type="adi_3dtof_floor_detector_example_node" output="screen">
+        <param name="param_rostopic_cam_prefix" value="$(arg arg_rostopic_cam_prefix)" />
+        <param name="param_enable_pointcloud_output" value="$(arg arg_enable_pointcloud_output)" />
+        <param name="image_transport" value="$(arg compression_parameter)" />
+    </node>
+
+    <!-- Launch rqt -->
+    <node name = "adi_3dtof_floor_detector_rqt" pkg = "rqt_gui" type = "rqt_gui" respawn = "false" output = "screen" args = "--perspective-file $(find adi_3dtof_floor_detector)/rqt_config/adi_3dtof_floor_detector_rqt.perspective">
+    </node>
+   
+</launch>
