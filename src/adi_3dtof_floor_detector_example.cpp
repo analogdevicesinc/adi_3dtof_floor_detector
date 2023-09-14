@@ -457,13 +457,7 @@ int main(int argc, char** argv)
     while (ros::ok())
     {
       ROS_INFO("adi_3dtof_floor_detector output generation::Running loop");
-
-      /**
-       * The publish() function is how you send messages. The parameter
-       * is the message object. The type of this object must agree with the type
-       * given as a template parameter to the advertise<>() call, as was done
-       * in the constructor above.
-       */
+      /*Generate host outputs*/
       if (!floor_detector_example.generateOutput())
       {
         floor_detector_example.shutDownAllNodes();

@@ -24,7 +24,7 @@ The **ADI 3DToF Floor Detector** is developed as a ROS application running on th
 - USB type-C to type-A cable - with 5gbps data speed support
 - Host laptop with intel i5 or higher cpu running Ubuntu-20.04LTS or WSL2 with Ubuntu-20.04
 
- :memo: *Note* 
+ :memo: *Note:* 
  Refer the [EVAL-ADTF3175D-NXZ User Guide](https://wiki.analog.com/resources/eval/user-guides/eval-adtf3175d-nxz) to ensure the Eval module has the adequate power supply during the operation.
 
 The below diagram shows the architecture of the required hardware setup.
@@ -99,11 +99,14 @@ The image below shows the connection diagram of the actual setup :
 # Software Setup and Running the ROS node on the EVAL-ADTF3175D-NXZ
 1. Download and install the latest version of *ADI 3DToF Floor Detector* from the Release page.
 
-2. After installing the software, go to the installation folder(~/Analog Devices/ADI3DToFFloorDetector-Rel1.0.0/image) and run the 'get_image.sh' script. This script will download the custom Ubuntu 20.04 image for the EVAL-ADTF3175D-NXZ. 
 
-3.	Flash .img file to the SD card, follow steps in this link[EVAL-ADTF3175D-NXZ Users Guide](https://wiki.analog.com/resources/eval/user-guides/eval-adsd3100-nxz/flashing_image_instructions) to flash the .img file to SD card.
+2. After installing the software, go to the installation folder(~/Analog Devices/ADI3DToFFloorDetector-Relx.x.x) and run the 'get_image.sh' script. This script will download the custom Ubuntu 20.04 image for the EVAL-ADTF3175D-NXZ. 
+
+
+3.	Flash the '.img' file to the SD card, follow steps in this link[EVAL-ADTF3175D-NXZ Users Guide](https://wiki.analog.com/resources/eval/user-guides/eval-adsd3100-nxz/flashing_image_instructions) to flash the .img file to SD card.
     
-    :memo: *Note* 
+
+    :memo: *Note:* 
     This image contains the necessary software and code to start using the ROS node. The source code for the ```adi_3dtof_floor_detector``` can be found in ```/home/analog/catkin_ws/src/```
 
 4.	Follow the instructions below to run the *adi_3dtof_floor_detector* application on the EVAL-ADTF3175D-NXZ module.
@@ -117,11 +120,12 @@ The image below shows the connection diagram of the actual setup :
       Password: analog   
     ```
 
-    :memo: *Note* 
+
+    :memo: *Note:* 
     If you do not have a Linux Host machine, then install Windows Subsystem for Linux(WSL2) with Ubuntu 20.04.
     Refer to this [link](https://learn.microsoft.com/en-us/windows/wsl/install) for instructions.
 
-> :memo
+> :memo:
 > **Setting Date/Time**  
 > Make sure the Date/Time is set properly before compiling and running the application. Connecting to a WiFi network would make sure the Date/Time is set properly. The custom Ubuntu
 > 20.04 image is configured to connect to a network with following SSID and Password by default.  
@@ -143,7 +147,8 @@ The image below shows the connection diagram of the actual setup :
     $ catkin_make -DCMAKE_BUILD_TYPE=RELEASE -j2  
     ```
 
-    :memo: *Note* 
+
+    :memo: *Note:* 
     The directory `/home/analog/catkin_ws/` is set up as the catkin workspace and this workspace is already sourced in the `~/.bashrc`
 
 8.	Running the ROS Node:
@@ -159,7 +164,8 @@ The image below shows the connection diagram of the actual setup :
     $ roslaunch adi_3dtof_floor_detector adi_3dtof_floor_detector.launch
     ```
 
-    >:memo: *Note*  
+
+    >:memo: *Note:*  
     >If you are using WSL as the Host machine, then setting Host as ROS Master does not work. In this case, you must unset the ROS master on the device.
     >Run the following command to unset the ROS Master and use the EVAL-ADTF3175D-NXZ as the ROS master on the device.
 
@@ -171,6 +177,8 @@ The image below shows the connection diagram of the actual setup :
 
     >On the WSL Host, open an Ubuntu 20.04 Terminal and run the following command
     >```
+
+    >$ export ROS_HOSTNAME="Device Name"
     >$ export ROS_MASTER_URI=http://10.42.0.1:11311
     >$ export ROS_IP=10.42.0.100
     >```
@@ -204,7 +212,8 @@ The image below shows the connection diagram of the actual setup :
 
 The package also provides a ROS node *adi_3dtof_floor_detector_example_node* which can be used to understand how to use the output from the ADI Floor Detector algorithm. The *adi_3dtof_floor_detector_example_node* subscribes to the output topics of *adi_3dtof_floor_detector_node* from the device and generates the output images. The output image topics of *adi_3dtof_floor_detector_node* can be either compressed or uncompressed.
 
-:memo: *Note* 
+
+:memo: *Note:* 
 It is assumed that the correct version of ROS is installed and configured properly, if not please install the ROS from [here](http://wiki.ros.org/noetic/Installation/Ubuntu) and setup the catkin workspace by following the procedure as mentioned [here](http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment#:~:text=you%20installed%20ROS.-,Create%20a%20ROS%20Workspace,-catkin).
 
 1. Clone the repo and checkout the correct release branch/tag into catkin workspace/src directory
@@ -228,7 +237,8 @@ It is assumed that the correct version of ROS is installed and configured proper
 
 4. This node can be run in 2 ways using the following command in a new terminal. 
     
-    :memo: *Note* 
+
+    :memo: *Note:* 
     Make sure that the ADI 3DToF Floor Detector node is already running on a device before running this node.
 
     Using RVIZ,  
@@ -277,8 +287,9 @@ Follow the instructions mentioned [here](#build_on_host) to clone and build the 
 ## Requirement on file-io input video files
 To run the *adi_3dtof_floor_detector_node* in file-io mode, the video files should be given as input.
 Please follow the below instructions to set up the input video files.
-1. Go to the installation directory of the *ADI 3DToF ADTF31xx* appliation (~/Analog Devices/ADI3DToFFloorDetector-Rel1.0.0/videos)
-2. Run the *get_videos.sh* script which will download the *adi_3dtof_input_video_files.zip* file in the current directory.
+
+1. Go to the installation directory of the *ADI 3DToF Floor Detector* appliation (~/Analog Devices/ADI3DToFFloorDetector-Relx.x.x)
+2. Run the *get_video.sh* script which will download the *adi_3dtof_input_video_files.zip* file in the current directory.
 3. Unzip it and copy the directory as *~/catkin_ws/src/adi_3dtof_input_video_files*.
 4. Update the input file argument *arg_input_file_name_or_ros_topic_prefix_name* in the launch file *adi_3dtof_floor_detector_node.launch* as per the above file path.
 
@@ -458,7 +469,8 @@ If ```arg_enable_pointcloud_output``` is enabled,
     - "raw" - raw images, "compressedDepth" - compressed 16 bit images.
 
 
-> :memo: *Note*
+
+> :memo: *Note:*
 > - _If any of these parameters are not set/declared, default values will be used._
 
 
