@@ -1,0 +1,6 @@
+{
+    "VAUX_POWER_VOLTAGE": "18",
+    "DEPTH_INI": "/home/user/.ros/config/RawToDepthAdsd3500_lr-qnative.ini",
+    "FPS": "30",
+    "FSYNC_MODE": "1"
+}

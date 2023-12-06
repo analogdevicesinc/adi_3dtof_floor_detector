@@ -7,9 +7,11 @@ and its licensors.
 #ifndef INPUT_SENSOR_FILE_ROSBAGBIN_H
 #define INPUT_SENSOR_FILE_ROSBAGBIN_H
 
-#include "input_sensor.h"
 #include <stdint.h>
+
 #include <fstream>
+
+#include "input_sensor.h"
 
 /**
  * @brief This is input class for sensor as camera
@@ -58,13 +60,14 @@ public:
     camera_extrinsics_.translation_matrix[1] = 0.0f;
     camera_extrinsics_.translation_matrix[2] = 0.0f;
   }
-  void openSensor(std::string sensor_name, int input_image_width, int input_image_height, int processing_scale,
-                  std::string config_file_name);
+  void openSensor(
+    std::string sensor_name, int input_image_width, int input_image_height, int processing_scale,
+    std::string config_file_name);
   void configureSensor(std::string frame_type);
-  void getIntrinsics(CameraIntrinsics* camera_intrinsics_data);
-  void getExtrinsics(CameraExtrinsics* camera_extrinsics_data);
-  bool readNextFrame(unsigned short* depth_frame, unsigned short* ir_frame);
-  bool getFrameTimestamp(ros::Time* timestamp);
+  void getIntrinsics(CameraIntrinsics * camera_intrinsics_data);
+  void getExtrinsics(CameraExtrinsics * camera_extrinsics_data);
+  bool readNextFrame(unsigned short * depth_frame, unsigned short * ir_frame);
+  bool getFrameTimestamp(rclcpp::Time * timestamp);
   void closeSensor();
 
   /**
@@ -72,9 +75,9 @@ public:
    *
    * @param threshold ABinvalidation threshold
    */
-  void setABinvalidationThreshold(int threshold)
+  void setABinvalidationThreshold(int /*threshold*/)
   {
-    // Does nothing here, should be overridden in derived class.
+    // Does nothing here.
     return;
   }
 
@@ -83,9 +86,9 @@ public:
    *
    * @param threshold Confidence threshold
    */
-  void setConfidenceThreshold(int threshold)
+  void setConfidenceThreshold(int /*threshold*/)
   {
-    // Does nothing here, should be overridden in derived class.
+    // Does nothing here.
     return;
   }
 

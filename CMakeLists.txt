@@ -1,30 +1,50 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.8)
 project(adi_3dtof_floor_detector)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-#add_compile_options(-std = c++ 11)
+# c standard
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-  cv_bridge
-  image_view
-  image_geometry
-  image_transport
-  roscpp
-  sensor_msgs
-  std_msgs
-  eigen_conversions
-  tf2
-  tf2_ros
-  pcl_ros
-  dynamic_reconfigure
-)
+# c++ standard
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
 
-find_package(Eigen3 QUIET)
+# warnings
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+# find_package(<dependency> REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_geometry REQUIRED)
+find_package(image_transport REQUIRED)
+find_package(compressed_depth_image_transport REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(pcl_ros REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system)
 
+# add include files as per PCL version installed
+if(${PCL_VERSION} VERSION_EQUAL 1.10.0)
+  include_directories(include_floor_plane_detection/pcl_1_10_0)
+elseif(${PCL_VERSION} VERSION_EQUAL 1.12.1)
+  include_directories(include_floor_plane_detection/pcl_1_12_1)
+endif()
+
+#target_compile_definitions(${PROJECT_NAME} PRIVATE "ENABLE_FUNCTION_PROFILING")
+
+# neon Intrinsic
 if(CMAKE_BUILD_TYPE)
   string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
   if ((${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "aarch64|AARCH64") AND (${BUILD_TYPE} STREQUAL "release"))
@@ -35,243 +55,136 @@ if(CMAKE_BUILD_TYPE)
   endif()
 endif()
 
-## System dependencies are found with CMake's conventions
-#find_package(Boost REQUIRED COMPONENTS system)
-
-
-## Uncomment this if the package has a setup.py. This macro ensures
-## modules and global scripts declared therein get installed
-## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-#catkin_python_setup()
-
-################################################
-## Declare ROS messages, services and actions ##
-################################################
-
-## To declare and build messages, services or actions from within this
-## package, follow these steps:
-## * Let MSG_DEP_SET be the set of packages whose message types you use in
-##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
-## * In the file package.xml:
-##   * add a build_depend tag for "message_generation"
-##   * add a build_depend and a exec_depend tag for each package in MSG_DEP_SET
-##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
-##     but can be declared for certainty nonetheless:
-##     * add a exec_depend tag for "message_runtime"
-## * In this file (CMakeLists.txt):
-##   * add "message_generation" and every package in MSG_DEP_SET to
-##     find_package(catkin REQUIRED COMPONENTS ...)
-##   * add "message_runtime" and every package in MSG_DEP_SET to
-##     catkin_package(CATKIN_DEPENDS ...)
-##   * uncomment the add_*_files sections below as needed
-##     and list every .msg/.srv/.action file to be processed
-##   * uncomment the generate_messages entry below
-##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
-
-## Generate messages in the 'msg' folder
-#add_message_files(
-#FILES
-#Message1.msg
-#Message2.msg
-#)
-
-## Generate services in the 'srv' folder
-#add_service_files(
-#FILES
-#Service1.srv
-#Service2.srv
-#)
-
-## Generate actions in the 'action' folder
-#add_action_files(
-#FILES
-#Action1.action
-#Action2.action
-#)
-
-## Generate added messages and services with any dependencies listed here
-#generate_messages(
-#DEPENDENCIES
-#std_msgs #Or other packages containing msgs
-#)
-
-################################################
-## Declare ROS dynamic reconfigure parameters ##
-################################################
-
-## To declare and build dynamic reconfigure parameters within this
-## package, follow these steps:
-## * In the file package.xml:
-##   * add a build_depend and a exec_depend tag for "dynamic_reconfigure"
-## * In this file (CMakeLists.txt):
-##   * add "dynamic_reconfigure" to
-##     find_package(catkin REQUIRED COMPONENTS ...)
-##   * uncomment the "generate_dynamic_reconfigure_options" section below
-##     and list every .cfg file to be processed
-
-## Generate dynamic reconfigure parameters in the 'cfg' folder
-generate_dynamic_reconfigure_options(
-cfg/FloorDetectorParams.cfg
-#cfg / DynReconf2.cfg
-)
-
-###################################
-## catkin specific configuration ##
-###################################
-## The catkin_package macro generates cmake config files for your package
-## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if your package contains header files
-## LIBRARIES: libraries you create in this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES adi_3dtof_floor_detector
-  CATKIN_DEPENDS roscpp std_msgs image_geometry sensor_msgs pcl_ros
-)
-
-###########
-## Build ##
-###########
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIRS}
-)
-
+# host specific build command
 if(NOT HOST_BUILD)
   message(WARNING "If the package is being built on the TOF module, ignore this warning; otherwise, use the command below to build the package on the host.
   catkin_make -DCMAKE_BUILD_TYPE=Release -DHOST_BUILD=TRUE")
 endif()
 
-## Declare a C++ library
-#add_library(${ PROJECT_NAME }
-#src / ${ PROJECT_NAME } / adi_3dtof_floor_detector.cpp
-#)
+# includes
+include_directories(
+  include
+  ${EIGEN3_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
+)
 
-## Add cmake target dependencies of the library
-## as an example, code may need to be generated before libraries
-## either from message generation or dynamic reconfigure
-#add_dependencies(${ PROJECT_NAME } ${ ${ PROJECT_NAME } _EXPORTED_TARGETS } ${ catkin_EXPORTED_TARGETS })
+#List common dependencies
+SET(COMMON_DEPS
+  rclcpp 
+  std_msgs 
+  sensor_msgs 
+  tf2 
+  tf2_ros 
+  tf2_geometry_msgs 
+  pcl_ros 
+  pcl_conversions 
+  cv_bridge 
+  image_geometry 
+  image_transport 
+  compressed_depth_image_transport
+  OpenCV
+)
 
-## Declare a C++ executable
-## With catkin_make all packages are built within a single CMake context
-## The recommended prefix ensures that target names across packages don't collide
-# The macro should be passed using cmake command
-# ex: catkin_make -DHOST_BUILD=TRUE,
-# By default it is set to FALSE
+#List of common source files.
+SET(COMMON_SRC_FILES 
+  src/adi_3dtof_floor_detector_main.cpp 
+  src/adi_3dtof_floor_detector_algorithm.cpp 
+  src/adi_3dtof_floor_detector_application.cpp 
+  src/adi_3dtof_floor_detector_input_thread.cpp 
+  src/adi_3dtof_floor_detector_output_thread.cpp
+  src/image_proc_utils.cpp
+  src/input_sensor_file.cpp 
+  src/input_sensor_file_rosbagbin.cpp 
+  src/output_sensor_file.cpp 
+  src/ros-perception/image_transport_plugins/compressed_depth_image_transport/rvl_codec.cpp
+)
+
+# executables
+# main node
 if(NOT HOST_BUILD)
+  # compile for platforms with 3D ToF Sensor
   add_compile_definitions(ENABLE_ADI_3DTOF_ADTF31XX_SENSOR)
-  add_executable(${PROJECT_NAME}_node src/adi_3dtof_floor_detector_main.cpp src/adi_3dtof_floor_detector_algorithm.cpp src/adi_3dtof_floor_detector_application.cpp src/input_sensor_file.cpp src/input_sensor_adtf31xx.cpp src/image_proc_utils.cpp src/output_sensor_file.cpp src/adi_3dtof_floor_detector_input_thread.cpp src/adi_3dtof_floor_detector_output_thread.cpp src/input_sensor_file_rosbagbin.cpp src/input_sensor_ros_topics.cpp)
+  add_executable(${PROJECT_NAME}_node ${COMMON_SRC_FILES} src/input_sensor_adtf31xx.cpp)
 else()
-  add_executable(${PROJECT_NAME}_node src/adi_3dtof_floor_detector_main.cpp src/adi_3dtof_floor_detector_algorithm.cpp src/adi_3dtof_floor_detector_application.cpp src/input_sensor_file.cpp src/image_proc_utils.cpp src/output_sensor_file.cpp src/adi_3dtof_floor_detector_input_thread.cpp src/adi_3dtof_floor_detector_output_thread.cpp src/input_sensor_file_rosbagbin.cpp src/input_sensor_ros_topics.cpp)
+  # compile for non 3D ToF sensor platform(ex:Host machines)
+  add_executable(${PROJECT_NAME}_node ${COMMON_SRC_FILES} src/input_sensor_ros_topics.cpp)
 endif()
 
-#Example Node
-add_executable(adi_3dtof_floor_detector_example_node src/adi_3dtof_floor_detector_example.cpp src/image_proc_utils.cpp )
+# target the dependencies for the chosen node
+ament_target_dependencies(${PROJECT_NAME}_node ${COMMON_DEPS})
 
-#Dynamic Reconfigure
-add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_gencfg)
-
-## Rename C++ executable without prefix
-## The above recommended prefix causes long target names, the following renames the
-## target back to the shorter version for ease of user use
-## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-#set_target_properties(${ PROJECT_NAME } _node PROPERTIES OUTPUT_NAME node PREFIX "")
-
-## Add cmake target dependencies of the executable
-## same as for the library above
-#add_dependencies(${ PROJECT_NAME } _node ${ ${ PROJECT_NAME } _EXPORTED_TARGETS } ${ catkin_EXPORTED_TARGETS })
+# linking dependencies
 if(NOT HOST_BUILD)
+  # required for sensor platform only
   set(ADITOF_LIB1 ${PROJECT_SOURCE_DIR}/libs/libaditof.so)
 endif()
 
 if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "aarch64|AARCH64")
-  set(ADITOF_LIB2 ${PROJECT_SOURCE_DIR}/libs/libcompressed_depth_image_transport.so)
-  set(FLOOR_DETECTOR_CORE_LIB ${PROJECT_SOURCE_DIR}/libs/libfloor_plane_detection.a)
+  if(${PCL_VERSION} VERSION_EQUAL 1.10.0)
+    set(FLOOR_DETECTOR_CORE_LIB ${PROJECT_SOURCE_DIR}/libs/libfloor_plane_detection.a)
+  endif()
 elseif (${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64|X86_64")
-  set(ADITOF_LIB2 ${PROJECT_SOURCE_DIR}/libs_linux_x86/libcompressed_depth_image_transport.so)
-  set(FLOOR_DETECTOR_CORE_LIB ${PROJECT_SOURCE_DIR}/libs_linux_x86/libfloor_plane_detection.a)
+  if(${PCL_VERSION} VERSION_EQUAL 1.12.1)
+    set(FLOOR_DETECTOR_CORE_LIB ${PROJECT_SOURCE_DIR}/libs_linux_x86/libfloor_plane_detection.a)
+  endif()
 endif()
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
-  ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
+  ${PCL_LIBRARIES}
   ${ADITOF_LIB1}
-  ${ADITOF_LIB2}
-  ${FLOOR_DETECTOR_CORE_LIB})
-
-target_link_libraries(${PROJECT_NAME}_example_node
-	${catkin_LIBRARIES}
-	${OpenCV_LIBRARIES}
+  ${FLOOR_DETECTOR_CORE_LIB}
 )
 
-#############
-## Install ##
-#############
-
-#all install targets should use catkin DESTINATION variables
-#See http:  // ros.org/doc/api/catkin/html/adv_user_guide/variables.html
-
-## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-#catkin_install_python(PROGRAMS
-#scripts / my_python_script
-#DESTINATION ${ CATKIN_PACKAGE_BIN_DESTINATION }
-#)
-
-#Copy the lib to devel / lib
-set(COMPRESSED_DEPTH_IMAGE_TRANSPORT_LIB ${CATKIN_DEVEL_PREFIX}/lib/libcompressed_depth_image_transport.so)
-add_custom_command( TARGET ${PROJECT_NAME}_node POST_BUILD COMMAND cp ${ADITOF_LIB2} ${COMPRESSED_DEPTH_IMAGE_TRANSPORT_LIB} )
-
-set(RQT_RVIZ_ORIGINAL_FILE ${PROJECT_SOURCE_DIR}/rqt_config/adi_3dtof_floor_detector_rqt_rviz.rviz)
-set(RQT_RVIZ_DEST_FILE ~/.ros/adi_3dtof_floor_detector_rqt_rviz.rviz)
-add_custom_command( TARGET ${PROJECT_NAME}_node POST_BUILD COMMAND cp ${RQT_RVIZ_ORIGINAL_FILE} ${RQT_RVIZ_DEST_FILE} )
-
 ## Mark executables for installation
-## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
- install(TARGETS ${PROJECT_NAME}_node
-   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
- )
- 
- install(TARGETS ${PROJECT_NAME}_example_node
-   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
- )
+install(TARGETS ${PROJECT_NAME}_node
+DESTINATION lib/${PROJECT_NAME})
 
-## Mark libraries for installation
-## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-#install(TARGETS ${ PROJECT_NAME }
-#ARCHIVE DESTINATION ${ CATKIN_PACKAGE_LIB_DESTINATION }
-#LIBRARY DESTINATION ${ CATKIN_PACKAGE_LIB_DESTINATION }
-#RUNTIME DESTINATION ${ CATKIN_GLOBAL_BIN_DESTINATION }
-#)
+# example node only for host
 
-## Mark cpp header files for installation
-#install(DIRECTORY include / ${ PROJECT_NAME } /
-#DESTINATION ${ CATKIN_PACKAGE_INCLUDE_DESTINATION }
-#FILES_MATCHING PATTERN "*.h"
-#PATTERN ".svn" EXCLUDE
-#)
+if(HOST_BUILD)
+  # example node executable
+  add_executable(${PROJECT_NAME}_example_node
+    src/adi_3dtof_floor_detector_example.cpp
+    src/image_proc_utils.cpp
+    src/ros-perception/image_transport_plugins/compressed_depth_image_transport/rvl_codec.cpp
+  )
 
-## Mark other files for installation (e.g. launch and bag files, etc.)
-#install(FILES
-# #myfile1
-# #myfile2
-#DESTINATION ${ CATKIN_PACKAGE_SHARE_DESTINATION }
-#)
+  ament_target_dependencies(${PROJECT_NAME}_example_node ${COMMON_DEPS})
 
-#############
-## Testing ##
-#############
+  target_link_libraries(${PROJECT_NAME}_example_node
+    ${OpenCV_LIBRARIES}
+    ${Boost_LIBRARIES}
+  )
 
-## Add gtest based cpp test target and link libraries
-#if (TARGET ${ PROJECT_NAME } - test)
-#target_link_libraries(${ PROJECT_NAME } - test ${ PROJECT_NAME })
+  install(TARGETS ${PROJECT_NAME}_example_node
+  DESTINATION lib/${PROJECT_NAME})
+
+endif()
+
+# install
+install(DIRECTORY rviz 
+DESTINATION share/${PROJECT_NAME})
+
+install(DIRECTORY rqt_config
+DESTINATION share/${PROJECT_NAME})
+
+install(DIRECTORY launch
+DESTINATION share/${PROJECT_NAME})
+
+#if(BUILD_TESTING)
+  #find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  #set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  #set(ament_cmake_cpplint_FOUND TRUE)
+  #ament_lint_auto_find_test_dependencies()
 #endif()
 
-## Add folders to be run by python nosetests
-#catkin_add_nosetests(test)
+ament_package()
+

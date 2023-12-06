@@ -11,18 +11,18 @@ Here is the sample output of **ADI 3DToF Floor Detector**. From the left, IR ima
 
 The **ADI 3DToF Floor Detector** is developed as a ROS application running on the ADI’s *EVAL-ADTF3175D-NXZ* Time-of-Flight platform. The node uses [*ADI ToF SDK*](https://github.com/analogdevicesinc/ToF/) APIs to capture the frames from the sensor. The algorithm runs on the captured depth image and the outputs are published as ROS topics. The Floor Detection algorithm is highly optimized to run at the average of 60FPS on the *EVAL-ADTF3175D-NXZ* platform. The node publishes the Camera Info, Floor Mask Image of 512x512 (8bits per pixel) resolution along with Depth & IR Images of 512x512 (16 bits per image) resolution at 30FPS. 
 
-[![Noetic](https://img.shields.io/badge/-NOETIC-green?style=plastic&logo=ros)](http://wiki.ros.org/noetic) [![Ubuntu 20.04](https://img.shields.io/badge/-UBUNTU%2020.04-orange?style=plastic&logo=ubuntu&logoColor=white)](https://releases.ubuntu.com/focal/) ![ARM64](https://img.shields.io/badge/arm64-blue?style=plastic&logo=arm&logoColor=white) ![x86_64](https://img.shields.io/badge/x86__64-blue?style=plastic&logo=intel&logoColor=white) [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](./LICENSE)
+[![Humble](https://img.shields.io/badge/-humble-green?style=plastic&logo=ros)](https://docs.ros.org/en/humble/index.html) [![Ubuntu 22.04](https://img.shields.io/badge/-UBUNTU%2022.04-orange?style=plastic&logo=ubuntu&logoColor=white)](https://releases.ubuntu.com/jammy/) [![Ubuntu 20.04](https://img.shields.io/badge/-UBUNTU%2020.04-orange?style=plastic&logo=ubuntu&logoColor=white)](https://releases.ubuntu.com/focal/) ![ARM64](https://img.shields.io/badge/arm64-blue?style=plastic&logo=arm&logoColor=white) ![x86_64](https://img.shields.io/badge/x86__64-blue?style=plastic&logo=intel&logoColor=white) [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](./LICENSE.txt)
 
 ---
 # Background
 - Supported Time-of-flight boards: [ADTF3175D](https://www.analog.com/en/products/adtf3175.html)
-- Supported ROS and OS distro: Noetic (Ubuntu 20.04)
+- Supported ROS and OS distro: Humble (Ubuntu 20.04 and 22.04)
 - Supported platform: armV8 64-bit (aarch64), armV8 64-bit (arm64) and Intel Core x86_64(amd64) processors(Core i3, Core i5 and Core i7)
 
 # Hardware
 - [EVAL-ADTF3175D-NXZ Module](https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/EVAL-ADTF3175.html#eb-overview)
 - USB type-C to type-A cable - with 5gbps data speed support
-- Host laptop with intel i5 or higher cpu running Ubuntu-20.04LTS or WSL2 with Ubuntu-20.04
+- Host laptop with intel i5 or higher cpu running Ubuntu-22.04LTS or WSL2 with Ubuntu-22.04
 
  :memo: *Note:* 
  Refer the [EVAL-ADTF3175D-NXZ User Guide](https://wiki.analog.com/resources/eval/user-guides/eval-adtf3175d-nxz) to ensure the Eval module has the adequate power supply during the operation.
@@ -99,15 +99,12 @@ The image below shows the connection diagram of the actual setup :
 # Software Setup and Running the ROS node on the EVAL-ADTF3175D-NXZ
 1. Download and install the latest version of *ADI 3DToF Floor Detector* from the Release page.
 
-
 2. After installing the software, go to the installation folder(~/Analog Devices/ADI3DToFFloorDetector-Relx.x.x) and run the 'get_image.sh' script. This script will download the custom Ubuntu 20.04 image for the EVAL-ADTF3175D-NXZ. 
-
 
 3.	Flash the '.img' file to the SD card, follow steps in this link[EVAL-ADTF3175D-NXZ Users Guide](https://wiki.analog.com/resources/eval/user-guides/eval-adsd3100-nxz/flashing_image_instructions) to flash the .img file to SD card.
     
-
     :memo: *Note:* 
-    This image contains the necessary software and code to start using the ROS node. The source code for the ```adi_3dtof_floor_detector``` can be found in ```/home/analog/catkin_ws/src/```
+    This image contains the necessary software and code to start using the ROS node. The source code for the ```adi_3dtof_floor_detector``` can be found in ```/home/analog/ros2_ws/src/```
 
 4.	Follow the instructions below to run the *adi_3dtof_floor_detector* application on the EVAL-ADTF3175D-NXZ module.
 
@@ -120,10 +117,10 @@ The image below shows the connection diagram of the actual setup :
       Password: analog   
     ```
 
-
     :memo: *Note:* 
-    If you do not have a Linux Host machine, then install Windows Subsystem for Linux(WSL2) with Ubuntu 20.04.
+    If you do not have a Linux Host machine, then install Windows Subsystem for Linux(WSL2) with Ubuntu 22.04.
     Refer to this [link](https://learn.microsoft.com/en-us/windows/wsl/install) for instructions.
+    Please Note: WSL2 only supports simulation mode as of now as topics from the devices cant be subscribed.
 
 > :memo:
 > **Setting Date/Time**  
@@ -139,64 +136,44 @@ The image below shows the connection diagram of the actual setup :
 >-  https://ubuntuforums.org/showthread.php?t=862620  
 >-  https://timetoolsltd.com/ntp/how-to-install-and-configure-ntp-on-linux/  
 
-7. The ROS Noetic and dependent packages are already installed in the EVAL-ADTF3175D-NXZ image and the source code for the *adi_3dtof_floor_detector* is present in `/home/analog/catkin_ws/src/` folder. The package is also pre-built, hence there is no need to build the package. 
+7. The ROS2 Humble and dependent packages are already installed in the EVAL-ADTF3175D-NXZ image and the source code for the *adi_3dtof_floor_detector* is present in `/home/analog/ros2_ws/src/` folder. The package is also pre-built, hence there is no need to build the package. 
   
-    If the source files are modified, then use the following commands to build the package.  
-    ```
-    $ cd ~/catkin_ws/  
-    $ catkin_make -DCMAKE_BUILD_TYPE=RELEASE -j2  
-    ```
+>    If the source files are modified, then use the following commands to build the package.
+>    copy the tof libraries from ~/Workspace/ToF/build/sdk/ to adi_3dtof_adtf31xx/libs/ use the below command
+>>```bash
+>> $ cp ~/Workspace/ToF/build/sdk/libaditof.so* ~/ros2_ws/src/adi_3dtof_floor_detector/libs/ 
+>>```
 
+    ```
+    $ cd ~/ros2_ws/  
+    $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release  
+    ```
 
     :memo: *Note:* 
-    The directory `/home/analog/catkin_ws/` is set up as the catkin workspace and this workspace is already sourced in the `~/.bashrc`
+    The directory `/home/analog/ros2_ws/` is set up as the ros2 workspace and this workspace is already sourced in the `~/.bashrc`
 
 8.	Running the ROS Node:
 
-    On the EVAL-ADTF3175D-NXZ device, the ROS Master is set to the IP address of the Host machine, hence it is required to run `roscore` on the Host machine (*applicable only to Linux host*).
-
-    On the Linux Host, open a terminal and run the following command
-    ```bash
-    $ roscore
-    ```
     On the Device:
     ```bash
-    $ roslaunch adi_3dtof_floor_detector adi_3dtof_floor_detector.launch
+    $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_launch.py
     ```
 
-
     >:memo: *Note:*  
-    >If you are using WSL as the Host machine, then setting Host as ROS Master does not work. In this case, you must unset the ROS master on the device.
-    >Run the following command to unset the ROS Master and use the EVAL-ADTF3175D-NXZ as the ROS master on the device.
-
-    >On Device,
-    >```
-    >$ unset ROS_MASTER_URI
-    >$ roslaunch adi_3dtof_floor_detector adi_3dtof_floor_detector.launch
-    >```
-
-    >On the WSL Host, open an Ubuntu 20.04 Terminal and run the following command
-    >```
-
-    >$ export ROS_HOSTNAME="Device Name"
-    >$ export ROS_MASTER_URI=http://10.42.0.1:11311
-    >$ export ROS_IP=10.42.0.100
-    >```
+    >If you are using WSL as the Host machine, then you wont be able to list and subscribe to the topics published by the device. Please use a linux system to help visualize the topics.
 
     At this stage, the *adi_3dtof_floor_detector_node* will be launched and will start publishing the topics ```/cam1/depth_image, /cam1/ir_image, /cam1/camera_info /cam1/floor_mask```.
 
-    To see the depth, IR and floor mask images on the Host machine, simply open the RVIZ and add ```/cam1/depth_image``` and ```/cam1/ir_image```  and ```/cam1/floor_mask``` topics to visualize the images.
+    To see the depth, IR and floor mask images on the Host machine, simply open the RVIZ2 and add ```/cam1/depth_image``` and ```/cam1/ir_image```  and ```/cam1/floor_mask``` topics to visualize the images.
 
-    The below image shows subscribed IR, Depth and Floor mask output images in RVIZ.
+    The below image shows subscribed IR, Depth and Floor mask output images in RVIZ2.
 
 
     <div style="text-align:center"><img src="./docs/images/rviz_output_1.png" alt="RVIZ Output Diagram 1"/></div>
 
 
-9.  To publish the compressed output images, do the needful changes as shown below in the `/launch adi_3dtof_floor_detector.launch` file in the *adi_3dtof_floor_detector* folder.
-    ```bash
-    <arg name="arg_enable_compression_op_image_topics" default="1"/>
-    ```
+9.  To publish the compressed output images, change default value of *arg_enable_compression_op_image_topics* to "True" in the `launch/adi_3dtof_floor_detector_launch.py` file.
+    
     Now run the *adi_3dtof_floor_detector* ROS node. At this stage, the *adi_3dtof_floor_detector* node will be launched and will start publishing the topics like below.
     ```bash
     /cam1/camera_info
@@ -204,7 +181,7 @@ The image below shows the connection diagram of the actual setup :
     /cam1/ir_image/compressedDepth
     /cam1/compressed_floor_mask
     ```
-    You can observe the depth and IR image outputs in the RVIZ but you cannot directly see the ```compressed_floor_mask``` in the RVIZ from the Host machine as this topic is not compressed with RVL compression algorithm. You need to run the *adi_3dtof_floor_detector_example_node* on the Host to machine to visualize it in RVIZ.
+    You can observe the depth and IR image outputs in the RVIZ2 but you cannot directly see the ```compressed_floor_mask``` in the RVIZ2 from the Host machine as this topic is not compressed with RVL compression algorithm. You need to run the *adi_3dtof_floor_detector_example_node* on the Host to machine to visualize it in RVIZ2.
 
 
 <a id="build_on_host"> </a>
@@ -212,56 +189,48 @@ The image below shows the connection diagram of the actual setup :
 
 The package also provides a ROS node *adi_3dtof_floor_detector_example_node* which can be used to understand how to use the output from the ADI Floor Detector algorithm. The *adi_3dtof_floor_detector_example_node* subscribes to the output topics of *adi_3dtof_floor_detector_node* from the device and generates the output images. The output image topics of *adi_3dtof_floor_detector_node* can be either compressed or uncompressed.
 
-
 :memo: *Note:* 
-It is assumed that the correct version of ROS is installed and configured properly, if not please install the ROS from [here](http://wiki.ros.org/noetic/Installation/Ubuntu) and setup the catkin workspace by following the procedure as mentioned [here](http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment#:~:text=you%20installed%20ROS.-,Create%20a%20ROS%20Workspace,-catkin).
+It is assumed that the correct version of ROS is installed and configured properly, if not please install the ROS from [here](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html) and setup the ros2 workspace in the home directory. (with workspace folder named as "ros2_ws")
 
-1. Clone the repo and checkout the correct release branch/tag into catkin workspace/src directory
+1. Clone the repo and checkout the correct release branch/tag into ros2 workspace/src directory
     ```bash
-    $ cd ~/catkin_ws/src
-    $ git clone https://github.com/analogdevicesinc/adi_3dtof_floor_detector.git -b v1.0.0
+    $ cd ~/ros2_ws/src
+    $ git clone https://github.com/analogdevicesinc/adi_3dtof_floor_detector.git -b v2.0.0
     ```
 
 2. Install the dependencies
     ```bash
-    $ cd ~/catkin_ws/
+    $ cd ~/ros2_ws/
     $ rosdep install --from-paths src -y --ignore-src    
     ```
 
 3. Build the package
     ```bash
-    $ cd ~/catkin_ws/src
-    $ catkin_make -DCMAKE_BUILD_TYPE=RELEASE -DHOST_BUILD=TRUE -j2
-    $ source devel/setup.bash
+    $ cd ~/ros2_ws/src
+    $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DHOST_BUILD=TRUE 
+    $ source install/setup.bash
     ```    
 
 4. This node can be run in 2 ways using the following command in a new terminal. 
     
-
     :memo: *Note:* 
     Make sure that the ADI 3DToF Floor Detector node is already running on a device before running this node.
 
-    Using RVIZ,  
-    In adi_3dtof_floor_detector_example_rviz.launch file change the parameter  
-    param name=```image_transport``` to ```raw```  for raw image.  
-    param name=```image_transport``` to ```compressedDepth```  for compressed images.  
-    then run the below command.   
+    Using RVIZ2,  
+    run the below command.   
     ```bash  
-    $roslaunch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rviz.launch
+    $ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rviz_launch.py
     ```
 
-    At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```floor_marked_depth_image, floor_removed_depth_image```. The RVIZ will also be launched and outputs are shown as below.
+    At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```floor_marked_depth_image, floor_removed_depth_image```. The RVIZ2 will also be launched and outputs are shown as below.
 
 
     <div style="text-align:center"><img src="./docs/images/rviz_output_2.png" alt="RVIZ Output Diagram 2"/></div>
 
     Using RQT,  
-    In adi_3dtof_floor_detector_example_rqt.launch file change the parameter  
-    param name=```image_transport``` to ```raw```  for raw image.  
-    param name=```image_transport``` to ```compressedDepth```  for compressed images.  
-    then run the below command.
+    run the below command.
     ```bash
-    $roslaunch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rqt.launch
+    $ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rqt_launch.py
     ```
     At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```floor_marked_depth_image, floor_removed_depth_image```. The RQT will also be launched and outputs are shown as below.
 
@@ -271,11 +240,9 @@ It is assumed that the correct version of ROS is installed and configured proper
 
     Here, the displayed parameters can be changed in run-time. This will help in fine-tuning and evaluating the algorithm.
 
-5. Optionally, you can enable floor removed point cloud output by changing the parameter in the adi_3dtof_floor_detector_example_rviz.launch file as shown below.
-    ```bash
-    <arg name="arg_enable_pointcloud_output" default="1" />
-    ```
-    To visualize the point cloud output, add the ```floor_removed_point cloud``` in the RVIZ. If the point cloud output is enabled when the outputs of the *adi_3dtof_floor_detector_node* are not compressed then the process might slow down. For the best usage, recommended option is to enable compression on outputs of *adi_3dtof_floor_detector_node* when the point cloud output is required.
+5. Optionally, you can enable floor removed point cloud output by changing the value of the parameter *arg_enable_pointcloud_output* to "True" in the adi_3dtof_floor_detector_example_rviz_launch.py file.
+    
+    To visualize the point cloud output, add the ```floor_removed_point cloud``` in the RVIZ2. If the point cloud output is enabled when the outputs of the *adi_3dtof_floor_detector_node* are not compressed then the process might slow down. For the best usage, recommended option is to enable compression on outputs of *adi_3dtof_floor_detector_node* when the point cloud output is required.
         
 ---
 
@@ -287,15 +254,14 @@ Follow the instructions mentioned [here](#build_on_host) to clone and build the 
 ## Requirement on file-io input video files
 To run the *adi_3dtof_floor_detector_node* in file-io mode, the video files should be given as input.
 Please follow the below instructions to set up the input video files.
-
 1. Go to the installation directory of the *ADI 3DToF Floor Detector* appliation (~/Analog Devices/ADI3DToFFloorDetector-Relx.x.x)
 2. Run the *get_video.sh* script which will download the *adi_3dtof_input_video_files.zip* file in the current directory.
-3. Unzip it and copy the directory as *~/catkin_ws/src/adi_3dtof_input_video_files*.
+3. Unzip it and copy the directory as *~/ros2_ws/src/adi_3dtof_input_video_files*.
 4. Update the input file argument *arg_input_file_name_or_ros_topic_prefix_name* in the launch file *adi_3dtof_floor_detector_node.launch* as per the above file path.
 
 After the successful build, please refer the below instructions to run the node.
 
-1. Change the following parameters in the *adi_3dtof_floor_detector_node.launch* file.
+1. Change the following parameters in the *adi_3dtof_floor_detector_node_launch.py* file.
 
     With .bin file as input,
     ```
@@ -303,14 +269,14 @@ After the successful build, please refer the below instructions to run the node.
     arg_in_file_name to be set to the input file name
     ```
 
-2. After updating the launch file, run the roslaunch with the updated launch file.
+2. After updating the launch file, run ros2 launch with the updated launch file.
     ```bash
-    $ roslaunch adi_3dtof_floor_detector adi_3dtof_floor_detector.launch
+    $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_launch.py
     ```
 
 At this stage, the *adi_3dtof_floor_detector_node* will be launched and will start publishing the topics ```/cam1/depth_image, /cam1/ir_image, /cam1/camera_info /cam1/floor_mask```.
 
-To see the depth, IR and Floor mask Images on the Host machine, simply open the RVIZ and add ```/cam1/depth_image``` and ```/cam1/ir_image```  and ```/cam1/floor_mask``` topics to visualize the images.
+To see the depth, IR and Floor mask Images on the Host machine, simply open the RVIZ2 and add ```/cam1/depth_image``` and ```/cam1/ir_image```  and ```/cam1/floor_mask``` topics to visualize the images.
 
 Run the *adi_3dtof_floor_detector_example_node* to get the ```floor_marked_depth_image, floor_removed_depth_image``` outputs.
 
@@ -384,10 +350,10 @@ If output image-compression is enabled:
       _"config_crosby_old_modes.json" - For CR/DV series of Eval Boards  
       "config_crosby_adsd3500_new_modes.json" - For AM series of Eval Boards_
 
-+ **param_enable_ransac_floor_detection** (int, default: 1)
++ **param_enable_ransac_floor_detection** (int, default: True)
     - Enable option for RANSAC floor detection, _0: disable, 1:enable_
 
-+ **param_enable_fallback_floor_detection** (int, default: 1)
++ **param_enable_fallback_floor_detection** (int, default: True)
     - Enable option for fallback floor detection when RANSAC fails, _0: disable, 1:enable_
 
 + **param_ransac_distance_threshold_mtr** (float, default: 0.025f)
@@ -402,7 +368,7 @@ If output image-compression is enabled:
 + **param_fallback_floor_height_offset_mtr** (float, default: 0.1f)
     - The floor height offset for the fallback (3D Yw based) floor detection, default value is 10cms
 
-+ **param_enable_compression_op_image_topics** (int, default: 0)
++ **param_enable_compression_op_image_topics** (int, default: False)
     - The enable option to publish compressed output images (Depth, IR, Floor Mask), _0: disable, 1:enable_
 
 + **param_input_image_width** (int, default: 1024)
@@ -464,11 +430,6 @@ If ```arg_enable_pointcloud_output``` is enabled,
 + **param_enable_pointcloud_output** (int, default: 0)
     - The enable option for the floor removed point cloud output
 
-+ **image_transport** (string, default:"raw")
-    - In this node image transport subscribers are utilized, and ```image_transport``` parameter indicates the type of publisher topic to subscribe to.
-    - "raw" - raw images, "compressedDepth" - compressed 16 bit images.
-
-
 
 > :memo: *Note:*
 > - _If any of these parameters are not set/declared, default values will be used._
@@ -477,8 +438,9 @@ If ```arg_enable_pointcloud_output``` is enabled,
 
 ---
 **Limitations**
-1. Compression on the point cloud is not supported.
-2. The *adi_3dtof_floor_detector_node* can only subscribes to uncompressed ROS topic images.
+1. WSL2 host setup does not support realtime demo with TOF devices as of now.
+2. Compression on the point cloud is not supported.
+3. The *adi_3dtof_floor_detector_node* can only subscribes to uncompressed ROS topic images.
 
 ---
 

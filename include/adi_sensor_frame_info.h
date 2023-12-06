@@ -7,8 +7,9 @@ and its licensors.
 #ifndef ADI_SENSOR_FRAME_INFO_H
 #define ADI_SENSOR_FRAME_INFO_H
 
-#include <ros/ros.h>
 #include <stdint.h>
+
+#include <rclcpp/rclcpp.hpp>
 
 /**
  * @brief This is input class for sensor as camera
@@ -27,7 +28,7 @@ public:
   {
     depth_image_ = new short[image_width * image_height];
     ir_image_ = new short[image_width * image_height];
-    frame_timestamp_ = ros::Time::now();
+    frame_timestamp_ = rclcpp::Clock{}.now();
   }
 
   /**
@@ -39,9 +40,9 @@ public:
     delete[] depth_image_;
     delete[] ir_image_;
   }
-  short* depth_image_;
-  short* ir_image_;
-  ros::Time frame_timestamp_;
+  short * depth_image_;
+  short * ir_image_;
+  rclcpp::Time frame_timestamp_;
 };
 
 #endif

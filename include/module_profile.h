@@ -8,7 +8,7 @@ and its licensors.
 #define MODULE_PROFILE_H
 
 #ifdef ENABLE_FUNCTION_PROFILING
-extern volatile int* pprof_buff;
+extern volatile int * pprof_buff;
 void dumpFunctionParams(int ID);
 void initProfile(void);
 void closeProfile(void);
@@ -31,8 +31,8 @@ void flushProfile(void);
 #endif /* !ENABLE_FUNCTION_PROFILING */
 
 #ifdef PARSE_FUNCTION
-#define PROFILE_ID_START()                                                                                             \
-  void profile_id_init(void)                                                                                           \
+#define PROFILE_ID_START()   \
+  void profile_id_init(void) \
   {
 #define PROFILE_ID_END() }
 #define PROFILE_ID(id_name, id_num) profiles[id_num].func_name = #id_name;
