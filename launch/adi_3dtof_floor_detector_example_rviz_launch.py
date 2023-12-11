@@ -11,7 +11,7 @@ def generate_launch_description():
     
     #Arguments
     arg_rostopic_cam_prefix_desc = DeclareLaunchArgument('arg_rostopic_cam_prefix', default_value='cam1', description='Input ROS topic name')
-    arg_enable_pointcloud_output_desc = DeclareLaunchArgument('arg_enable_pointcloud_output', default_value='True', description='Point cloud outputflag')
+    arg_enable_pointcloud_output_desc = DeclareLaunchArgument('arg_enable_pointcloud_output', default_value='False', description='Point cloud outputflag')
 
     adi_3dtof_floor_detector_node_desc = Node(
                                         package='adi_3dtof_floor_detector',

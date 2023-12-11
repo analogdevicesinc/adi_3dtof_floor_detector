@@ -232,7 +232,7 @@ It is assumed that the correct version of ROS is installed and configured proper
     $ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rviz_launch.py
     ```
 
-    At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```floor_marked_depth_image, floor_removed_depth_image```. The RVIZ2 will also be launched and outputs are shown as below.
+    At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```/host/floor_marked_depth_image, /host/floor_removed_depth_image```. The RVIZ2 will also be launched and outputs are shown as below.
 
 
     <div style="text-align:center"><img src="./docs/images/rviz_output_2.png" alt="RVIZ Output Diagram 2"/></div>
@@ -242,7 +242,7 @@ It is assumed that the correct version of ROS is installed and configured proper
     ```bash
     $ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rqt_launch.py
     ```
-    At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```floor_marked_depth_image, floor_removed_depth_image```. The RQT will also be launched and outputs are shown as below.
+    At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```/host/floor_marked_depth_image, /host/floor_removed_depth_image```. The RQT will also be launched and outputs are shown as below.
 
 
     <div style="text-align:center"><img src="./docs/images/rqt_output.png" alt="RQT Output Diagram"/></div>
@@ -252,7 +252,7 @@ It is assumed that the correct version of ROS is installed and configured proper
 
 5. Optionally, you can enable floor removed point cloud output by changing the value of the parameter *arg_enable_pointcloud_output* to "True" in the adi_3dtof_floor_detector_example_rviz_launch.py file.
     
-    To visualize the point cloud output, add the ```floor_removed_point cloud``` in the RVIZ2. If the point cloud output is enabled when the outputs of the *adi_3dtof_floor_detector_node* are not compressed then the process might slow down. For the best usage, recommended option is to enable compression on outputs of *adi_3dtof_floor_detector_node* when the point cloud output is required.
+    To visualize the point cloud output, add the ```/host/floor_removed_point_cloud``` in the RVIZ2. If the point cloud output is enabled when the outputs of the *adi_3dtof_floor_detector_node* are not compressed then the process might slow down. For the best usage, recommended option is to enable compression on outputs of *adi_3dtof_floor_detector_node* when the point cloud output is required.
         
 ---
 
@@ -288,7 +288,7 @@ At this stage, the *adi_3dtof_floor_detector_node* will be launched and will sta
 
 To see the depth, IR and Floor mask Images on the Host machine, simply open the RVIZ2 and add ```/cam1/depth_image``` and ```/cam1/ir_image```  and ```/cam1/floor_mask``` topics to visualize the images.
 
-Run the *adi_3dtof_floor_detector_example_node* to get the ```floor_marked_depth_image, floor_removed_depth_image``` outputs.
+Run the *adi_3dtof_floor_detector_example_node* to get the ```/host/floor_marked_depth_image, /host/floor_removed_depth_image``` outputs.
 
 
 ---
