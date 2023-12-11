@@ -43,7 +43,7 @@ def generate_launch_description():
     #If 'arg_input_mode_desc' is 1 or 2 then 'arg_input_file_name_or_ros_topic_prefix_name_desc' represents the file name.
     #If 'arg_input_mode' is 3 then 'arg_input_file_name_or_ros_topic_prefix_name_desc' represents the prefix of ros topics, Default value: 'cam1'.
     #Relative path to the launch file which gets executed.
-    arg_input_file_name_or_ros_topic_prefix_name_desc = DeclareLaunchArgument('arg_input_file_name_or_ros_topic_prefix_name', default_value= package_dir + "../adi_3dtof_input_video_files/adi_3dtof_height_170mm_yaw_135degrees_cam1.bin")
+    arg_input_file_name_or_ros_topic_prefix_name_desc = DeclareLaunchArgument('arg_input_file_name_or_ros_topic_prefix_name', default_value= package_dir + "../adi_3dtof_input_video_files/adi_3dtof_height_170mm_yaw_0degrees_cam3.bin")
 
     
     ###### ADTF31XX Sensor related arguments ######

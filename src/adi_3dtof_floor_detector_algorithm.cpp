@@ -50,14 +50,12 @@ void ADI3DToFFloorDetector::updateDynamicReconfigureVariablesProcessThread()
 
   if (
     fallback_floor_height_offset_mtr_ != dynamic_reconf_params_.fallback_floor_height_offset_mtr) {
-    RCLCPP_INFO(
-      this->get_logger(), "Before: Modified the 'fallback_floor_height_offset_mtr' parameter %f",
-      fallback_floor_height_offset_mtr_);
     fallback_floor_height_offset_mtr_ = dynamic_reconf_params_.fallback_floor_height_offset_mtr;
+    floor_distance_threshold_mm_ = (camera_height_mtr_ - fallback_floor_height_offset_mtr_) * 1000.0f;
     RCLCPP_INFO(
       this->get_logger(),
       "Dynamic Reconfigure: Modified the 'fallback_floor_height_offset_mtr' parameter %f",
-      dynamic_reconf_params_.fallback_floor_height_offset_mtr);
+      fallback_floor_height_offset_mtr_);
   }
 }
 

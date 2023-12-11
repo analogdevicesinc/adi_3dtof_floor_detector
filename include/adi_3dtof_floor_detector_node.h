@@ -127,7 +127,7 @@ public:
 
     rcl_interfaces::msg::ParameterDescriptor ransac_distance_threshold_mtr_descriptor{};
     rcl_interfaces::msg::FloatingPointRange ransac_distance_threshold_mtr_range;
-    ransac_distance_threshold_mtr_range.set__from_value(0.01).set__to_value(0.05).set__step(0.005);
+    ransac_distance_threshold_mtr_range.set__from_value(0.01).set__to_value(0.05);
     ransac_distance_threshold_mtr_descriptor.floating_point_range = {
       ransac_distance_threshold_mtr_range};
     ransac_distance_threshold_mtr_descriptor.description =
@@ -137,7 +137,7 @@ public:
 
     rcl_interfaces::msg::ParameterDescriptor ransac_max_iterations_descriptor{};
     rcl_interfaces::msg::IntegerRange ransac_max_iterations_range;
-    ransac_max_iterations_range.set__from_value(1).set__to_value(500).set__step(1);
+    ransac_max_iterations_range.set__from_value(1).set__to_value(500);
     ransac_max_iterations_descriptor.integer_range = {ransac_max_iterations_range};
     ransac_max_iterations_descriptor.description = "Maximum number of RANSAC iterations allowed";
     this->declare_parameter<int>(
@@ -151,8 +151,7 @@ public:
 
     rcl_interfaces::msg::ParameterDescriptor fallback_floor_height_offset_mtr_descriptor{};
     rcl_interfaces::msg::FloatingPointRange fallback_floor_height_offset_mtr_range;
-    fallback_floor_height_offset_mtr_range.set__from_value(0.01).set__to_value(0.15).set__step(
-      0.01);
+    fallback_floor_height_offset_mtr_range.set__from_value(0.01).set__to_value(0.15);
     fallback_floor_height_offset_mtr_descriptor.floating_point_range = {
       fallback_floor_height_offset_mtr_range};
     fallback_floor_height_offset_mtr_descriptor.description =
@@ -162,14 +161,14 @@ public:
 
     rcl_interfaces::msg::ParameterDescriptor ab_threshold_descriptor{};
     rcl_interfaces::msg::IntegerRange ab_threshold_range;
-    ab_threshold_range.set__from_value(1).set__to_value(255).set__step(1);
+    ab_threshold_range.set__from_value(1).set__to_value(255);
     ab_threshold_descriptor.integer_range = {ab_threshold_range};
     ab_threshold_descriptor.description = "Set ab threshold value to device";
     this->declare_parameter<int>("param_ab_threshold", 10, ab_threshold_descriptor);
 
     rcl_interfaces::msg::ParameterDescriptor confidence_threshold_descriptor{};
     rcl_interfaces::msg::IntegerRange confidence_threshold_range;
-    confidence_threshold_range.set__from_value(1).set__to_value(255).set__step(1);
+    confidence_threshold_range.set__from_value(1).set__to_value(255);
     confidence_threshold_descriptor.integer_range = {confidence_threshold_range};
     confidence_threshold_descriptor.description = "Set confidence threshold value to device";
     this->declare_parameter<int>("param_confidence_threshold", 10, confidence_threshold_descriptor);

@@ -122,35 +122,45 @@ The image below shows the connection diagram of the actual setup :
     Refer to this [link](https://learn.microsoft.com/en-us/windows/wsl/install) for instructions.
     Please Note: WSL2 only supports simulation mode as of now as topics from the devices cant be subscribed.
 
-> :memo:
-> **Setting Date/Time**  
-> Make sure the Date/Time is set properly before compiling and running the application. Connecting to a WiFi network would make sure the Date/Time is set properly. The custom Ubuntu
-> 20.04 image is configured to connect to a network with following SSID and Password by default.  
->  ```
->  SSID : ADI  
->  Password: analog123  
-> ```  
-> You can either setup a network with the above properties or configure the Device to connect to any available network.  
-> Alternatively, the Host machine can be setup as a local NTP server and the devices can be configured to update Date/Time using the Host machine.  
-> Refer to below links for setting and configuring NTP on Ubuntu machines.
->-  https://ubuntuforums.org/showthread.php?t=862620  
->-  https://timetoolsltd.com/ntp/how-to-install-and-configure-ntp-on-linux/  
+    > :memo:
+    > **Setting Date/Time**  
+    > Make sure the Date/Time is set properly before compiling and running the application. Connecting to a WiFi network would make sure the Date/Time is set properly. The custom Ubuntu
+    > 20.04 image is configured to connect to a network with following SSID and Password by default.  
+    >  ```
+    >  SSID : ADI  
+    >  Password: analog123  
+    > ```  
+    > You can either setup a network with the above properties or configure the Device to connect to any available network.  
+    > Alternatively, the Host machine can be setup as a local NTP server and the devices can be configured to update Date/Time using the Host machine.  
+    > Refer to below links for setting and configuring NTP on Ubuntu machines.
+    >-  https://ubuntuforums.org/showthread.php?t=862620  
+    >-  https://timetoolsltd.com/ntp/how-to-install-and-configure-ntp-on-linux/  
 
-7. The ROS2 Humble and dependent packages are already installed in the EVAL-ADTF3175D-NXZ image and the source code for the *adi_3dtof_floor_detector* is present in `/home/analog/ros2_ws/src/` folder. The package is also pre-built, hence there is no need to build the package. 
+7. The ROS2 Humble and dependent packages are already installed in the EVAL-ADTF3175D-NXZ image and the source code for the *adi_3dtof_floor_detector* is present in `/home/analog/ros2_ws/src/` folder. The package is also pre-built, hence there is no need to build the package. The directory `/home/analog/ros2_ws/` is set up as the ros2 workspace and this workspace is already sourced in the `~/.bashrc`.
   
->    If the source files are modified, then use the following commands to build the package.
->    copy the tof libraries from ~/Workspace/ToF/build/sdk/ to adi_3dtof_adtf31xx/libs/ use the below command
->>```bash
->> $ cp ~/Workspace/ToF/build/sdk/libaditof.so* ~/ros2_ws/src/adi_3dtof_floor_detector/libs/ 
->>```
+    > If the source files are modified, then use the following commands to build the package.
+    > Copy the tof libraries from ~/Workspace/ToF/build/sdk/ to adi_3dtof_floor_detector/libs/ use the below command
+    >```bash
+    > $ cp ~/Workspace/ToF/build/sdk/libaditof.so* ~/ros2_ws/src/adi_3dtof_floor_detector/libs/ 
+    >```
 
-    ```
-    $ cd ~/ros2_ws/  
-    $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release  
-    ```
+    > Build the package using the below command.
+    >>```bash
+    >> $ cd ~/ros2_ws/
+    >> $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+    >>```
 
-    :memo: *Note:* 
-    The directory `/home/analog/ros2_ws/` is set up as the ros2 workspace and this workspace is already sourced in the `~/.bashrc`
+    >  **:warning: <span style="color:red">If the above command is stuck in the console then execute below commands**</span> 
+    >>```bash
+    >> $ cd ~/ros2_ws/build/adi_3dtof_floor_detector 
+    >> $ make -j1
+    >>```
+    > Once the build is successful, run the below commands so that symlinks are installed in the proper paths.
+    >>```bash
+    >> $ cd ~/ros2_ws/
+    >> $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+    >> $ source install/setup.bash
+    >>```
 
 8.	Running the ROS Node:
 
@@ -159,8 +169,8 @@ The image below shows the connection diagram of the actual setup :
     $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_launch.py
     ```
 
-    >:memo: *Note:*  
-    >If you are using WSL as the Host machine, then you wont be able to list and subscribe to the topics published by the device. Please use a linux system to help visualize the topics.
+    :memo: *Note:*  
+    If you are using WSL as the Host machine, then you wont be able to list and subscribe to the topics published by the device. Please use a linux system to help visualize the topics.
 
     At this stage, the *adi_3dtof_floor_detector_node* will be launched and will start publishing the topics ```/cam1/depth_image, /cam1/ir_image, /cam1/camera_info /cam1/floor_mask```.
 
@@ -190,7 +200,7 @@ The image below shows the connection diagram of the actual setup :
 The package also provides a ROS node *adi_3dtof_floor_detector_example_node* which can be used to understand how to use the output from the ADI Floor Detector algorithm. The *adi_3dtof_floor_detector_example_node* subscribes to the output topics of *adi_3dtof_floor_detector_node* from the device and generates the output images. The output image topics of *adi_3dtof_floor_detector_node* can be either compressed or uncompressed.
 
 :memo: *Note:* 
-It is assumed that the correct version of ROS is installed and configured properly, if not please install the ROS from [here](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html) and setup the ros2 workspace in the home directory. (with workspace folder named as "ros2_ws")
+It is assumed that the correct version of ROS is installed and configured properly, if not please install the ROS from [here](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html) and setup the ros2 workspace in the home directory with workspace folder named as "ros2_ws".
 
 1. Clone the repo and checkout the correct release branch/tag into ros2 workspace/src directory
     ```bash
@@ -206,15 +216,15 @@ It is assumed that the correct version of ROS is installed and configured proper
 
 3. Build the package
     ```bash
-    $ cd ~/ros2_ws/src
-    $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DHOST_BUILD=TRUE 
+    $ cd ~/ros2_ws
+    $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RELEASE -DHOST_BUILD=TRUE 
     $ source install/setup.bash
     ```    
 
 4. This node can be run in 2 ways using the following command in a new terminal. 
     
     :memo: *Note:* 
-    Make sure that the ADI 3DToF Floor Detector node is already running on a device before running this node.
+    Make sure that the *adi_3dtof_floor_detector* node is already running on a device before running this node.
 
     Using RVIZ2,  
     run the below command.   
@@ -371,16 +381,6 @@ If output image-compression is enabled:
 + **param_enable_compression_op_image_topics** (int, default: False)
     - The enable option to publish compressed output images (Depth, IR, Floor Mask), _0: disable, 1:enable_
 
-+ **param_input_image_width** (int, default: 1024)
-    - Image width
-
-+ **param_input_image_height** (int, default: 1024)
-    - Image height
-
-+ **param_processing_scale** (int, default: 0)
-    - The scale factor to determine some algorithm parameters
-
-
 
 ## 2. adi_3dtof_floor_detector_example_node
 
@@ -411,14 +411,14 @@ If output image-compression is enabled:
 
 ### Published topics
 
-+ **/floor_marked_depth_image**
++ **host/floor_marked_depth_image**
     - 16-bit Depth image of size 512X512 
 
-+ **/floor_removed_depth_image**
++ **host/floor_removed_depth_image**
     - 16-bit IR image of size 512X512
 
 If ```arg_enable_pointcloud_output``` is enabled,
-+ **/floor_removed_point_cloud**
++ **host/floor_removed_point_cloud**
     - The floor removed point cloud
 
 
