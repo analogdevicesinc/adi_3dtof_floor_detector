@@ -38,7 +38,6 @@ The image below shows the connection diagram of the actual setup :
 > :memo:
 > **ADSD3500 Firmware**  
 > Make sure the sensor is flashed with the compatible ADSD3500 firmware. The minimum version is listed below:  
-> **CR/DV series : 5.2.5.0**  
 > **AM series : 5.2.5.0**  
 > Follow the below instructions to read the ADSD3500 FW version  
 > 1. Login to the EVAL-ADTF3175D-NXZ module using ssh. On the Host machine open the “Terminal” and run the following command to logging into the device.  
@@ -130,12 +129,13 @@ The image below shows the connection diagram of the actual setup :
     >-  https://ubuntuforums.org/showthread.php?t=862620  
     >-  https://timetoolsltd.com/ntp/how-to-install-and-configure-ntp-on-linux/  
 
-7. The ROS2 Humble and dependent packages are already installed in the EVAL-ADTF3175D-NXZ image and the source code for the *adi_3dtof_floor_detector* is present in `/home/analog/ros2_ws/src/` folder. The package is also pre-built, hence there is no need to build the package. The directory `/home/analog/ros2_ws/` is set up as the ros2 workspace and this workspace is already sourced in the `~/.bashrc`.
+7. The ROS2 Humble and dependent packages are already installed in the EVAL-ADTF3175D-NXZ image and the source code for the *adi_3dtof_floor_detector* is present in `/home/analog/ros2_ws/src/` folder. The package is also pre-built, hence there is no need to build the package. The directory `/home/analog/ros2_ws/` is set up as the ros2 workspace.
   
     > If the source files are modified, then use the following commands to build the package.
     > ```bash
+    > $ source /opt/ros/humble/install/setup.bash
     > $ cd ~/ros2_ws/
-    > $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DNXP=1
+    > $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DNXP=1 --parallel-workers 1
     > ```
     >  **:warning: <span style="color:red">If the above command is stuck in the console then execute below commands**</span> 
     > ```bash
@@ -202,14 +202,24 @@ The package also provides a ROS node *adi_3dtof_floor_detector_example_node* whi
     $ rosdep install --from-paths src -y --ignore-src    
     ```
 
-3. Build the package
+3. Update submodules in aditof SDK
+    ```bash
+    $ cd ~/ros2_ws/src/libaditof
+    $ git submodule update --init --recursive
+    ```
+4. Install dependencies:
+    ```bash
+    $ cd ~/ros2_ws/
+    $ rosdep install --from-paths src -y --ignore-src    
+    ```
+5. Build the package
     ```bash
     $ cd ~/ros2_ws
-    $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RELEASE -DHOST_BUILD=TRUE 
+    $ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DSENSOR_CONNECTED=TRUE -DBUILD_EXAMPLE_NODE=TRUE
     $ source install/setup.bash
-    ```    
+    ```
 
-4. This node can be run in 2 ways using the following command in a new terminal. 
+6. This node can be run in 2 ways using the following command in a new terminal. 
     
     > :memo: *Note:* 
     > Make sure that the *adi_3dtof_floor_detector* node is already running on a device before running this node.
@@ -238,7 +248,7 @@ The package also provides a ROS node *adi_3dtof_floor_detector_example_node* whi
 
     Here, the displayed parameters can be changed in run-time. This will help in fine-tuning and evaluating the algorithm.
 
-5. Optionally, you can enable floor removed point cloud output by changing the value of the parameter *arg_enable_pointcloud_output* to "True" in the adi_3dtof_floor_detector_example_rviz_launch.py file.
+7. Optionally, you can enable floor removed point cloud output by changing the value of the parameter *arg_enable_pointcloud_output* to "True" in the adi_3dtof_floor_detector_example_rviz_launch.py file.
     
     To visualize the point cloud output, add the ```/host/floor_removed_point_cloud``` in the RVIZ2. If the point cloud output is enabled when the outputs of the *adi_3dtof_floor_detector_node* are not compressed then the process might slow down. For the best usage, recommended option is to enable compression on outputs of *adi_3dtof_floor_detector_node* when the point cloud output is required.
         
@@ -355,8 +365,15 @@ Run the *adi_3dtof_floor_detector_example_node* to get the ```/host/floor_marked
 > :memo: *Note:*
 > - _If any of these parameters are not set/declared, default values will be used._
 
-## Compile Flags
-**-DBUILD_EXAMPLE_NODE** - Builds an example node that utilizes the floor detection algorithm to mask out the floor
+## Build Flags
+
+The following build flags can be used to configure the package during the build process:
+
+| **Flag**                  | **Type** | **Default Value** | **Description**                                                                 |
+|--------------------------------|----------|-------------------|---------------------------------------------------------------------------------|
+| **SENSOR_CONNECTED**           | Boolean  | TRUE              | Set to `TRUE` if a sensor is connected, otherwise set to `FALSE` for File-IO mode. |
+| **BUILD_EXAMPLE_NODE**         | Boolean  | FALSE             | Set to `TRUE` to build the `adi_3dtof_floor_detector_example_node`. |
+
 
 ## Limitations
 1. WSL2 host setup does not support realtime demo with TOF devices as of now.

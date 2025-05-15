@@ -9,7 +9,7 @@ from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import PathJoinSubstitution
 from launch.substitutions import LaunchConfiguration
 
-package_dir = get_package_share_directory('adi_3dtof_floor_detector') + "/../../../../src/rcd-adi-3dtof-floor-detector/"
+package_dir = get_package_share_directory('adi_3dtof_floor_detector') + "/../../../../src/adi_3dtof_floor_detector/"
 def generate_launch_description(): 
     #Arguments
 
@@ -36,7 +36,7 @@ def generate_launch_description():
     # config_adsd3500_adsd3030.json - For ADSd3030(VGA sensor)
     config_json_file_name = "config_adsd3500_adsd3100.json"
     arg_config_file_name_of_tof_sdk_desc = DeclareLaunchArgument(
-        'arg_config_file_name_of_tof_sdk', default_value= package_dir + "config/" + config_json_file_name)
+        'arg_config_file_name_of_tof_sdk', default_value= get_package_share_directory('adi_3dtof_floor_detector') + "config/" + config_json_file_name)
 
     # Frame Type
     #MP(1024x01024) sensor:
