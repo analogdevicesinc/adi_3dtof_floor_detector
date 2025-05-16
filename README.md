@@ -40,7 +40,6 @@ The image below shows the connection diagram of the actual setup :
 > :memo:
 > **ADSD3500 Firmware**  
 > Make sure the sensor is flashed with the compatible ADSD3500 firmware. The minimum version is listed below:  
-> **CR/DV series : 5.2.5.0**  
 > **AM series : 5.2.5.0**  
 > Follow the below instructions to read the ADSD3500 FW version  
 > 1. Login to the EVAL-ADTF3175D-NXZ module using ssh. On the Host machine open the “Terminal” and run the following command to logging into the device.  
@@ -208,20 +207,31 @@ It is assumed that the correct version of ROS is installed and configured proper
     $ git clone https://github.com/analogdevicesinc/adi_3dtof_floor_detector.git -b v1.1.0
     ```
 
-2. Install the dependencies
+2. clone aditof SDK
+    ```bash
+    $ cd ~/catkin_ws/src
+    $ git clone https://github.com/analogdevicesinc/libaditof.git -b v6.0.1
+    ```
+3. Update submodules in aditof SDK
+    ```bash
+    $ cd ~/catkin_ws/src/libaditof
+    $ git submodule update --init --recursive
+    ```
+4. Install dependencies:
     ```bash
     $ cd ~/catkin_ws/
     $ rosdep install --from-paths src -y --ignore-src    
     ```
-
-3. Build the package
+5. Build the package
     ```bash
     $ cd ~/catkin_ws/
-    $ catkin_make -DCMAKE_BUILD_TYPE=RELEASE -j2
+    $ catkin config --install
+    $ catkin build -DCMAKE_BUILD_TYPE=RELEASE -DSENSOR_CONNECTED=TRUE -j
     $ source devel/setup.bash
+    $ export LD_LIBRARY_PATH=~/catkin_ws/install/lib:$LD_LIBRARY_PATH
     ```    
 
-4. This node can be run in 2 ways using the following command in a new terminal. 
+6. This node can be run in 2 ways using the following command in a new terminal. 
     
     :memo: *Note:* 
     Make sure that the ADI 3DToF Floor Detector node is already running on a device before running this node.
@@ -256,7 +266,7 @@ It is assumed that the correct version of ROS is installed and configured proper
 
     Here, the displayed parameters can be changed in run-time. This will help in fine-tuning and evaluating the algorithm.
 
-5. Optionally, you can enable floor removed point cloud output by changing the parameter in the adi_3dtof_floor_detector_example_rviz.launch file as shown below.
+7. Optionally, you can enable floor removed point cloud output by changing the parameter in the adi_3dtof_floor_detector_example_rviz.launch file as shown below.
     ```bash
     <arg name="arg_enable_pointcloud_output" default="1" />
     ```
@@ -295,6 +305,14 @@ At this stage, the *adi_3dtof_floor_detector_node* will be launched and will sta
 To see the depth, AB and Floor mask Images on the Host machine, simply open the RVIZ and add ```/cam1/depth_image``` and ```/cam1/ab_image```  and ```/cam1/floor_mask``` topics to visualize the images.
 
 Run the *adi_3dtof_floor_detector_example_node* to get the ```floor_marked_depth_image, floor_removed_depth_image``` outputs.
+
+### Build Flag
+
+The following build flag can be used to configure the package during the build process:
+
+| **Flag**                  | **Type** | **Default Value** | **Description**                                                                 |
+|--------------------------------|----------|-------------------|---------------------------------------------------------------------------------|
+| **SENSOR_CONNECTED**           | Boolean  | TRUE              | Set to `TRUE` if a sensor is connected, otherwise set to `FALSE` for File-IO mode. |
 
 ## Nodes
 
