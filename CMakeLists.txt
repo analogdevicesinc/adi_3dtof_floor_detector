@@ -91,7 +91,7 @@ SET(COMMON_SRC_FILES
   src/adi_3dtof_floor_detector_output_thread.cpp
   src/image_proc_utils.cpp  
   src/input_sensor_file_rosbagbin.cpp 
-  src/output_sensor_file.cpp
+  src/output_sensor_file.cpp 
   src/ros-perception/image_transport_plugins/compressed_depth_image_transport/rvl_codec.cpp
 )
 
@@ -161,6 +161,9 @@ install(DIRECTORY rviz
 DESTINATION share/${PROJECT_NAME})
 
 install(DIRECTORY rqt_config
+DESTINATION share/${PROJECT_NAME})
+
+install(DIRECTORY config
 DESTINATION share/${PROJECT_NAME})
 
 install(DIRECTORY launch
