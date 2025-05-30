@@ -20,7 +20,7 @@ and its licensors.
  * @param config_file_name config file name of ToF SDK is not used as this is file io mode.
  */
 void InputSensorFileRosbagBin::openSensor(
-  std::string sensor_name, int input_image_width, int input_image_height,
+  std::string sensor_name, int /*input_image_width*/, int /*input_image_height*/,
   std::string /*config_file_name*/, std::string /*input_sensor_ip*/)
 {
   in_file_name_ = sensor_name;
