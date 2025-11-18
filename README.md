@@ -5,10 +5,10 @@ The **ADI 3DToF Floor Detector** is a ROS (Robot Operating System) package for t
 Here is the sample output of **ADI 3DToF Floor Detector**. From the left, AB image & Depth image and Floor marked depth image can be seen below.
 
 
-<div style="text-align:center"><img src="./docs/images/floor_detection.png" alt="Floor Detection Diagram"/></div>
+![Floor Detection Diagram](./doc/images/floor_detection.png)
 
 
-The **ADI 3DToF Floor Detector** is developed as a ROS application running on the ADI’s *EVAL-ADTF3175D-NXZ* Time-of-Flight platform. The node uses [*ADI ToF SDK*](https://github.com/analogdevicesinc/ToF/) APIs to capture the frames from the sensor. The algorithm runs on the captured depth image and the outputs are published as ROS topics. The node publishes the Camera Info, Floor Mask Image along with Depth & AB Images. 
+The **ADI 3DToF Floor Detector** is developed as a ROS application running on the ADI’s *EVAL-ADTF3175D-NXZ* Time-of-Flight platform. The node uses [*ADI ToF SDK*](https://github.com/analogdevicesinc/ToF/) APIs to capture the frames from the sensor. The algorithm runs on the captured depth image and the outputs are published as ROS topics. The node publishes the Camera Info, Floor Mask Image along with Depth & AB Images.
 
 
 [![Humble](https://img.shields.io/badge/-humble-green?style=plastic&logo=ros)](https://docs.ros.org/en/humble/index.html) [![Ubuntu 22.04](https://img.shields.io/badge/-UBUNTU%2022.04-orange?style=plastic&logo=ubuntu&logoColor=white)](https://releases.ubuntu.com/jammy/) [![Ubuntu 20.04](https://img.shields.io/badge/-UBUNTU%2020.04-orange?style=plastic&logo=ubuntu&logoColor=white)](https://releases.ubuntu.com/focal/) ![ARM64](https://img.shields.io/badge/arm64-blue?style=plastic&logo=arm&logoColor=white) ![x86_64](https://img.shields.io/badge/x86__64-blue?style=plastic&logo=intel&logoColor=white) [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](./LICENSE.txt)
@@ -18,18 +18,18 @@ The **ADI 3DToF Floor Detector** is developed as a ROS application running on th
 - USB type-C to type-A cable - with 5gbps data speed support
 - Host laptop with intel i5 or higher cpu running Ubuntu-20.04LTS or with Ubuntu-22.04
 
- > [!note]  
+ > [!note]
  > Refer the [EVAL-ADTF3175D-NXZ User Guide](https://wiki.analog.com/resources/eval/user-guides/eval-adtf3175d-nxz) to ensure the Eval module has the adequate power supply during the operation.
 
  > [!important]
  > The EVAL-ADTF3175D-NXZ Sensor module must have a firmware version of at least **5.2.5.0**. Refer to [user guide](https://wiki.analog.com/resources/eval/user-guides/eval-adtf3175d-nxz-upgrade-firmware) on firmware upgrade, or see [upgrading the firmware](#upgrading-the-firmware).
 
-<div style="text-align:center"><img src="./docs/images/connection_diagram.png" alt="Connection Diagram"/></div>
+![Connection Diagram](./doc/images/connection_diagram.png)
 
 # adi_3dtof_floor_detector_node
 
 ## Operation Modes
-This package has three different operation modes. Refer to the following intra-links to setup the package accordingly.  
+This package has three different operation modes. Refer to the following intra-links to setup the package accordingly.
 1. [Camera Sensor Mode](#camera-sensor-mode)
 2. [File-IO Mode](#file-io-mode)
 3. [Network Mode](#network-mode)
@@ -58,7 +58,7 @@ $ export LD_LIBRARY_PATH=~/ros2_ws/install/lib:$LD_LIBRARY_PATH
 $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_launch.py arg_input_mode:=0
 ```
 
-> [!note]  
+> [!note]
 > The operation mode is determined by the launch parameter `arg_input_mode:=0`. This can be modified in the launch file. Refer to the [parameter](#parameters) table to see what other parameters can be passed.
 
 ### Updating the package
@@ -111,7 +111,7 @@ $ source ~/ros2_ws/install/setup.bash
 $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_launch.py arg_input_mode:=2
 ```
 
-> [!note]  
+> [!note]
 > The `arg_input_mode:=2` sets the node to operate in file-io mode. This can be set in the launch file. Refer to the [parameter](#parameters) table to see what other parameters can be passed.
 
 ## Network Mode
@@ -206,7 +206,7 @@ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_launch.py arg_inpu
 
 The below image shows subscribed AB, Depth and Floor mask output images in RVIZ.
 
-<div style="text-align:center"><img src="./docs/images/rviz_output_1.png" alt="RVIZ Output Diagram 1"/></div>
+![RVIZ Output Diagram 1](./doc/images/rviz_output_1.png)
 
 
 
@@ -224,38 +224,37 @@ $ git clone https://github.com/analogdevicesinc/adi_3dtof_floor_detector.git -b 
 2. Install dependencies:
 ```bash
 $ cd ~/ros2_ws/
-$ rosdep install --from-paths src -y --ignore-src    
+$ rosdep install --from-paths src -y --ignore-src
 ```
 3. Build the package
 ```bash
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-up-to adi_3dtof_floor_detector
 source install/setup.bash
-```    
-4. This node can be run in 2 ways using the following command in a new terminal. 
-    
- >[!note]       
+```
+4. This node can be run in 2 ways using the following command in a new terminal.
+
+ >[!note]
 Make sure that the ADI 3DToF Floor Detector node is already running on a device before running this node.
 
-Using RVIZ, 
+Using RVIZ,
 
-In adi_3dtof_floor_detector_example_rviz_launch.py file change the parameter  
-param name=```image_transport``` to ```raw```  for raw image.  
-param name=```image_transport``` to ```compressedDepth```  for compressed images.  
-then run the below command.   
-```bash  
+In adi_3dtof_floor_detector_example_rviz_launch.py file change the parameter
+param name=```image_transport``` to ```raw```  for raw image.
+param name=```image_transport``` to ```compressedDepth```  for compressed images.
+then run the below command.
+```bash
 $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rviz_launch.py
 ```
 
 At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```floor_marked_depth_image, floor_removed_depth_image```. The RVIZ will also be launched and outputs are shown as below.
 
-
-<div style="text-align:center"><img src="./docs/images/rviz_output_2.png" alt="RVIZ Output Diagram 2"/></div>
+![RVIZ Output Diagram 2](./doc/images/rviz_output_2.png)
 
 Using RQT,
 
-In adi_3dtof_floor_detector_example_rqt_launch.py file change the parameter  
-param name=```image_transport``` to ```raw```  for raw image.  
-param name=```image_transport``` to ```compressedDepth```  for compressed images.  
+In adi_3dtof_floor_detector_example_rqt_launch.py file change the parameter
+param name=```image_transport``` to ```raw```  for raw image.
+param name=```image_transport``` to ```compressedDepth```  for compressed images.
 then run the below command.
 ```bash
 $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rqt_launch.py
@@ -263,7 +262,7 @@ $ ros2 launch adi_3dtof_floor_detector adi_3dtof_floor_detector_example_rqt_laun
 At this stage, the *adi_3dtof_floor_detector_example_node* will be launched and start publishing the output topics ```floor_marked_depth_image, floor_removed_depth_image```. The RQT will also be launched and outputs are shown as below.
 
 
-<div style="text-align:center"><img src="./docs/images/rqt_output.png" alt="RQT Output Diagram"/></div>
+![RQT Output Diagram](./doc/images/rqt_output.png)
 
 
 Here, the displayed parameters can be changed in run-time. This will help in fine-tuning and evaluating the algorithm.
@@ -334,31 +333,31 @@ V4L2 custom control interface app version: 1.0.1
 59 31
 ```
 The first four values in the third line represents the version number, in this case, 5.2.5.0. If it is lower than this value, follow these steps below to update.
-1. On your PC, install ADI ToF SDK release [v6.0.1](https://github.com/analogdevicesinc/ToF/releases/tag/v6.0.1)  
-2. After installing goto the installation folder and run the following commands to download the image   
+1. On your PC, install ADI ToF SDK release [v6.0.1](https://github.com/analogdevicesinc/ToF/releases/tag/v6.0.1)
+2. After installing goto the installation folder and run the following commands to download the image
    ```bash
    cd ~/Analog\ Devices/ToF_Evaluation_Ubuntu_ADTF3175D-Relx.x.x/image.
    chmod +x get_image.sh and ./get_image.sh.
    ```
    - Latest image will be downloaded at ./image path as NXP-Img-Relx.x.x-ADTF3175D-.zip. Extract this folder using unzip NXP-Img-Relx.x.x-ADTF3175D-.zip command.
-   - This folder contains the NXP image and ADSD3500 firmware(Fw_Update_x.x.x.bin).  
+   - This folder contains the NXP image and ADSD3500 firmware(Fw_Update_x.x.x.bin).
 3. Run the following command to copy the Firmware to the NXP device
    ```bash
    $ scp Fw_Update_5.2.5.bin analog@10.43.0.1:/home/analog/Workspace
-      Username: analog 
+      Username: analog
       Password: analog
-   ```    
-4. Now login to the device and run the Firmware upgrade command.  
-> [!warning]  
+   ```
+4. Now login to the device and run the Firmware upgrade command.
+> [!warning]
 > Do NOT reboot the board or interrupt the process as this may corrupt the module
    ```bash
-   $ ssh analog@10.43.0.1 
-      Username: analog 
-      Password: analog   
+   $ ssh analog@10.43.0.1
+      Username: analog
+      Password: analog
    $ cd Workspace/ToF/build/examples/data_collect/
    $ ./data_collect --fw ~/Workspace/Fw_Update_x.x.x.bin config/config_default.json
-   ```  
--  Reboot the board after the successful operation.  
+   ```
+-  Reboot the board after the successful operation.
 
 ## Limitations
 1. Compression on the point cloud is not supported.
@@ -374,4 +373,4 @@ Any other inquiries are also welcome.
 
 
 
-  
+
